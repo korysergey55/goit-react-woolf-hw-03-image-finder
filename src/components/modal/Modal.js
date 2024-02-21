@@ -32,7 +32,7 @@ class Modal extends Component {
           <img
             className={styles.image}
             src={this.props.largeImageURL}
-            alt="random image" />
+            alt="random" />
         </div>
       </div>
     );
