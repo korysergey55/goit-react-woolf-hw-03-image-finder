@@ -1,7 +1,7 @@
 import { Component } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import styles from './styles.module.css'
-import { toast } from 'react-toastify'
+// import { toast } from 'react-toastify'
 import { ToastContainer } from 'react-toastify'
 
 import Searchbar from 'components/searchbar/Searchbar';
@@ -9,6 +9,7 @@ import ImageGallery from 'components/ImageGallery/ImageGallery';
 import Loader from 'components/loader/Loader';
 import Modal from 'components/modal/Modal';
 import Button from 'components/button/Button';
+import handleSearchProducts from 'api/api';
 
 
 class App extends Component {
@@ -28,7 +29,16 @@ class App extends Component {
       prevState.currentPage !== this.state.currentPage
     ) {
       document.body.style.backgroundImage = 'none'
-      this.handleSearchProducts();
+
+      this.setState({ loading: true });
+
+      handleSearchProducts(this.state)
+        .then(({ data }) => {
+          this.setState((prev) => ({
+            images: [...prev.images, ...data.hits], isLoadMore: data.hits.length
+          }))
+        })
+        .finally(this.setState({ loading: false }))
     }
   }
 
@@ -40,41 +50,42 @@ class App extends Component {
     this.setState({ largeImageURL: bigImage });
   };
 
-  handleSearchProducts = async () => {
-    const KEY_API = "21698474-fb36d7b3400c91ab3d227d6db";
-    const BASE_URL = "https://pixabay.com/api/";
+  // handleSearchProducts = async () => {
+  //   const KEY_API = "21698474-fb36d7b3400c91ab3d227d6db";
+  //   const BASE_URL = "https://pixabay.com/api/";
 
-    try {
-      this.setState({ loading: true });
-      const { data } = await axios.get(`${BASE_URL}?q=${this.state.searchWord}
-      &page=${this.state.currentPage}
-      &key=${KEY_API}&image_type=photo&orientation=horizontal&per_page=12`
-      );
+  //   try {
+  //     this.setState({ loading: true });
+  //     const { data } = await axios.get(`${BASE_URL}?q=${this.state.searchWord}
+  //     &page=${this.state.currentPage}
+  //     &key=${KEY_API}&image_type=photo&orientation=horizontal&per_page=12`
+  //     );
 
-      if (!data.hits.length) {
-        toast.error(`No photos available for your request`, {
-          theme: 'colored',
-        })
-      }
+  //     if (!data.hits.length) {
+  //       toast.error(`No photos available for your request`, {
+  //         theme: 'colored',
+  //       })
+  //     }
+  //     // return data
 
-      this.setState((prev) => ({
-        images: [...prev.images, ...data.hits], isLoadMore: data.hits.length
-      }))
+  //     this.setState((prev) => ({
+  //       images: [...prev.images, ...data.hits], isLoadMore: data.hits.length
+  //     }))
 
-    }
-    catch (error) {
-      toast.error(`${error.message}`, {
-        theme: 'colored',
-      })
-    }
-    finally {
-      this.setState({ loading: false });
-      window.scrollTo({
-        top: document.documentElement.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-  }
+  //   }
+  //   catch (error) {
+  //     toast.error(`${error.message}`, {
+  //       theme: 'colored',
+  //     })
+  //   }
+  //   finally {
+  //     this.setState({ loading: false });
+  //     window.scrollTo({
+  //       top: document.documentElement.scrollHeight,
+  //       behavior: "smooth",
+  //     });
+  //   }
+  // }
 
   showMore = () => {
     this.setState((prevState) => ({ currentPage: prevState.currentPage + 1 }));

@@ -5,14 +5,12 @@ class Modal extends Component {
 
   componentDidMount() {
     window.addEventListener("keydown", this.handleEsc);
-    const body = document.querySelector("body");
-    body.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
   }
 
   componentWillUnmount() {
     window.removeEventListener("keydown", this.handleEsc);
-    const body = document.querySelector("body");
-    body.style.overflow = "auto";
+    document.body.style.overflow = "auto";
   }
 
   handleEsc = (evt) => {
@@ -34,7 +32,7 @@ class Modal extends Component {
           <img
             className={styles.image}
             src={this.props.largeImageURL}
-            alt="image" />
+            alt="random image" />
         </div>
       </div>
     );
