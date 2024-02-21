@@ -14,12 +14,14 @@ class Searchbar extends Component {
 
   handaleSubmit = (evt) => {
     evt.preventDefault();
+
     if (this.state.searchWord === '') {
       toast.error(`Field can't be empty. Please enter somsing...`, {
         theme: 'colored',
       })
       return
     }
+
     if (this.state.searchWord === ' ') {
       toast.error(`Field can't be an empty string.`, {
         theme: 'colored',
