@@ -20,7 +20,7 @@ class App extends Component {
     isLoadMore: 0
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     if (
       prevState.searchWord !== this.state.searchWord ||
       prevState.currentPage !== this.state.currentPage
@@ -28,15 +28,20 @@ class App extends Component {
       document.body.style.backgroundImage = 'none'
 
       this.setState({ loading: true });
-
-      handleSearchProducts(this.state, this.setState)
-        .then(({ data }) => {
-          this.setState((prev) => ({
-            images: [...prev.images, ...data.hits],
-            isLoadMore: data.hits.length,
-            loading: false
-          }))
-        })
+      try {
+        const { data } = await handleSearchProducts(this.state, this.setState)
+        this.setState((prev) => ({
+          images: [...prev.images, ...data.hits],
+          isLoadMore: data.hits.length,
+          loading: false
+        }))
+      }
+      catch (error) {
+        console.log(error.message)
+      }
+      finally {
+        this.setState({ loading: false })
+      }
     }
   }
 
